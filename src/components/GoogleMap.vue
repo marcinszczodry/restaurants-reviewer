@@ -2,7 +2,7 @@
   <div>
     <div class="map"></div>
     <template v-if="!!google && !!map">
-      <slot></slot>
+      <slot />
     </template>
   </div>
 </template>
