@@ -1,5 +1,6 @@
 <template>
   <div>
+    <google-map />
   </div>
 </template>
 
@@ -7,6 +8,11 @@
 </style>
 
 <script>
+import GoogleMap from '@/components/GoogleMap.vue';
+
 export default {
+  components: {
+    GoogleMap,
+  },
 };
 </script>
