@@ -3,7 +3,12 @@
     <google-map
       :center="userGeolocation ? userGeolocation : mapCenter"
       :zoom="mapZoom"
-    />
+    >
+      <google-map-anchor
+        v-if="userGeolocation"
+        :position="userGeolocation"
+      />
+    </google-map>
   </div>
 </template>
 
@@ -12,9 +17,11 @@
 
 <script>
 import GoogleMap from '@/components/GoogleMap.vue';
+import GoogleMapAnchor from '@/components/GoogleMapAnchor.vue';
 
 export default {
   components: {
+    GoogleMapAnchor,
     GoogleMap,
   },
   data() {
