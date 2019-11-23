@@ -1,7 +1,7 @@
 <template>
   <div>
     <google-map
-      :center="mapCenter"
+      :center="userGeolocation ? userGeolocation : mapCenter"
       :zoom="mapZoom"
     />
   </div>
