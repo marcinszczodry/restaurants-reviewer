@@ -39,6 +39,17 @@ export default {
       map: null,
     };
   },
+  watch: {
+    center: {
+      handler(coords) {
+        if (this.map) this.map.setCenter(coords);
+      },
+      deep: true,
+    },
+    zoom(val) {
+      if (this.map) this.map.setZoom(val);
+    },
+  },
   created() {
     Initializer({
       apiKey: this.API_KEY,
