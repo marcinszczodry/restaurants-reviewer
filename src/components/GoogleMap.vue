@@ -51,7 +51,11 @@ export default {
     initialize() {
       const container = this.$el.querySelector('.map');
       const { Map } = this.google.maps;
-      this.map = new Map(container);
+      const options = {
+        center: this.center,
+        zoom: this.zoom,
+      };
+      this.map = new Map(container, options);
     },
   },
 };
