@@ -12,6 +12,26 @@ import Initializer from 'google-maps-api-loader';
 
 export default {
   name: 'GoogleMap',
+  props: {
+    center: {
+      type: Object,
+      required: true,
+      validator: (obj) => {
+        const { lat, lng } = obj;
+        const hasKeys = ['lat', 'lng'].every((key) => key in obj);
+        const areLatLngNumbers = typeof (lat) === 'number' && typeof (lng) === 'number';
+        const isLatInRange = lat >= -90 && lat <= 90;
+        const isLngInRange = lng >= -180 && lng <= 180;
+        return hasKeys && areLatLngNumbers && isLatInRange && isLngInRange;
+      },
+    },
+    zoom: {
+      type: Number,
+      required: false,
+      default: 6,
+      validator: (value) => Number.isInteger(value) && value >= 0 && value < 18,
+    },
+  },
   data() {
     return {
       API_KEY: 'AIzaSyD1QsK0TVMn_SWdk0k1K5oLR_DS0_6Cbqo',
