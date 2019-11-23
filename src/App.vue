@@ -24,6 +24,7 @@ export default {
         center: { lat: 52.3555, lng: -1.1743 },
         zoom: 7,
       },
+      userGeolocation: null,
     };
   },
   computed: {
