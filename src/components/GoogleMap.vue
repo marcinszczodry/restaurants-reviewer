@@ -56,6 +56,7 @@ export default {
     }).then((google) => {
       this.google = google;
       this.initialize();
+      this.$emit('map-init', google);
     });
   },
   methods: {

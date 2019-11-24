@@ -3,6 +3,7 @@
     <google-map
       :center="userGeolocation ? userGeolocation : mapCenter"
       :zoom="mapZoom"
+      @map-init="handleMapInit"
     >
       <google-map-anchor
         v-if="userGeolocation"
@@ -26,6 +27,7 @@ export default {
   },
   data() {
     return {
+      google: null,
       map: {
         // by default fallback to england's coordinates
         center: { lat: 52.3555, lng: -1.1743 },
@@ -33,6 +35,7 @@ export default {
       },
       status: {
         userGeolocationFinished: false,
+        mapInitialized: false,
       },
       userGeolocation: null,
     };
@@ -55,6 +58,10 @@ export default {
     this.userGeolocation = await this.getUserPosition();
   },
   methods: {
+    handleMapInit(google) {
+      this.google = google;
+      this.status.mapInitialized = true;
+    },
     async getUserPosition() {
       let location = null;
       let message = null;
