@@ -53,6 +53,7 @@ export default {
   created() {
     Initializer({
       apiKey: this.API_KEY,
+      libraries: ['places'],
     }).then((google) => {
       this.google = google;
       this.initialize();
