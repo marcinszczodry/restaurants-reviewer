@@ -31,6 +31,9 @@ export default {
         center: { lat: 52.3555, lng: -1.1743 },
         zoom: 7,
       },
+      status: {
+        userGeolocationFinished: false,
+      },
       userGeolocation: null,
     };
   },
@@ -80,6 +83,7 @@ export default {
         // eslint-disable-next-line
         console.warn(error);
       }
+      this.status.userGeolocationFinished = true;
       return location;
     },
   },
