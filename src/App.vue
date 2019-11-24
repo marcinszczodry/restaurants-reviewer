@@ -53,6 +53,12 @@ export default {
       this.map.zoom = 16;
       this.map.center = coords;
     },
+    status: {
+      handler({ userGeolocationFinished, mapInitialized }) {
+        if (userGeolocationFinished && mapInitialized) this.fetchRestaurants();
+      },
+      deep: true,
+    },
   },
   async created() {
     this.userGeolocation = await this.getUserPosition();
@@ -92,6 +98,9 @@ export default {
       }
       this.status.userGeolocationFinished = true;
       return location;
+    },
+    async fetchRestaurants() {
+      // fetch
     },
   },
 };
