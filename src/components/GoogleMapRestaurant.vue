@@ -2,7 +2,7 @@
 import marker from '@/mixins/marker';
 
 export default {
-  name: 'GoogleMapAnchor',
+  name: 'GoogleMapRestaurant',
   mixins: [marker],
   data() {
     return {
