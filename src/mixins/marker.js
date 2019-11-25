@@ -32,5 +32,8 @@ export default {
     });
     this.marker.setMap(this.map);
   },
+  destroyed() {
+    this.marker.setMap(null);
+  },
   render: () => null,
 };

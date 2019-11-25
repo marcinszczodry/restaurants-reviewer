@@ -75,6 +75,11 @@ export default {
       },
       deep: true,
     },
+    restaurantsMaximumRange: {
+      handler() {
+        this.fetchRestaurants();
+      },
+    },
   },
   async created() {
     this.userGeolocation = await this.getUserPosition();
