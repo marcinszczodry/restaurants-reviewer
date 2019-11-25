@@ -9,6 +9,7 @@
 
 <script>
 import Initializer from 'google-maps-api-loader';
+import styleLight from '@/data/mapStylesLight';
 
 export default {
   name: 'GoogleMap',
@@ -70,6 +71,11 @@ export default {
       const options = {
         center: this.center,
         zoom: this.zoom,
+        styles: styleLight,
+        fullscreenControl: false,
+        streetViewControl: false,
+        mapTypeControl: false,
+        zoomControl: false,
       };
       this.map = new Map(container, options);
     },
@@ -80,6 +86,6 @@ export default {
 <style>
   .map {
     height: 100vh;
-    width: 100%;
+    width: 100vw;
   }
 </style>
