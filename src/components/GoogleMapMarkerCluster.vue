@@ -18,6 +18,11 @@ export default {
       clusterer: null,
     };
   },
+  updated() {
+    this.clusterer.clearMarkers();
+    this.markers = this.getMarkers();
+    this.clusterer.addMarkers(this.markers);
+  },
   mounted() {
     this.markers = this.getMarkers();
     this.clusterer = new MarkerClusterer(
