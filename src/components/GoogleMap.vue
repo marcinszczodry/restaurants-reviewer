@@ -57,7 +57,10 @@ export default {
     }).then((google) => {
       this.google = google;
       this.initialize();
-      this.$emit('map-init', google);
+      this.$emit('map-init', {
+        google: this.google,
+        map: this.map,
+      });
     });
   },
   methods: {

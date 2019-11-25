@@ -64,8 +64,9 @@ export default {
     this.userGeolocation = await this.getUserPosition();
   },
   methods: {
-    handleMapInit(google) {
+    handleMapInit({ google, map }) {
       this.google = google;
+      this.googleMap = map;
       this.status.mapInitialized = true;
     },
     async getUserPosition() {
