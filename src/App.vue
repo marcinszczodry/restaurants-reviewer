@@ -9,6 +9,13 @@
         v-if="userGeolocation"
         :position="userGeolocation"
       />
+      <div v-if="restaurants">
+        <google-map-restaurant
+          v-for="restaurant in restaurants"
+          :key="restaurant.id"
+          :position="restaurant.geometry.location"
+        />
+      </div>
     </google-map>
   </div>
 </template>
@@ -19,10 +26,12 @@
 <script>
 import GoogleMap from '@/components/GoogleMap.vue';
 import GoogleMapAnchor from '@/components/GoogleMapAnchor.vue';
+import GoogleMapRestaurant from '@/components/GoogleMapRestaurant.vue';
 
 export default {
   components: {
     GoogleMapAnchor,
+    GoogleMapRestaurant,
     GoogleMap,
   },
   data() {
@@ -49,6 +58,9 @@ export default {
     },
     mapZoom() {
       return this.map.zoom;
+    },
+    restaurants() {
+      return this.restaurantsList;
     },
   },
   watch: {
