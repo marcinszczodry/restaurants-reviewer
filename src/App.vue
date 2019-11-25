@@ -39,6 +39,8 @@ export default {
         mapInitialized: false,
       },
       userGeolocation: null,
+      restaurantsList: null,
+      restaurantsMaximumRange: 500,
     };
   },
   computed: {
@@ -103,7 +105,41 @@ export default {
       return location;
     },
     async fetchRestaurants() {
-      // fetch
+      const { PlacesService, PlacesServiceStatus } = this.google.maps.places;
+      const service = new PlacesService(this.googleMap);
+      const request = {
+        location: this.userGeolocation,
+        radius: this.restaurantsMaximumRange,
+        type: [
+          'restaurant',
+        ],
+      };
+      // eslint-disable-next-line
+      await service.nearbySearch(request, (results, status) => {
+        if (status === PlacesServiceStatus.OK) {
+          let extractedRestaurantsDetails = [];
+          results.forEach((r) => {
+            const {
+              /* eslint-disable camelcase */
+              place_id,
+              name,
+              geometry,
+              rating,
+              user_ratings_total,
+              /* eslint-enable camelcase */
+            } = r;
+            const singleRestaurantDetails = {
+              id: place_id,
+              name,
+              geometry,
+              rating,
+              ratingCount: user_ratings_total,
+            };
+            extractedRestaurantsDetails = [...extractedRestaurantsDetails, singleRestaurantDetails];
+          });
+          if (extractedRestaurantsDetails) this.restaurantsList = extractedRestaurantsDetails;
+        }
+      });
     },
   },
 };
