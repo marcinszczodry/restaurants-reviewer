@@ -4,6 +4,10 @@
   </div>
 </template>
 <script>
+import MarkerClusterer from '@google/markerclusterer';
+// eslint-disable-next-line import/extensions
+import ICON_CIRCLE from '@/assets/icons/iconCircle.svg?data';
+
 export default {
   name: 'GoogleMapMarkerCluster',
   data() {
@@ -11,10 +15,25 @@ export default {
       google: this.$parent.google,
       map: this.$parent.map,
       markers: [],
+      clusterer: null,
     };
   },
   mounted() {
     this.markers = this.getMarkers();
+    this.clusterer = new MarkerClusterer(
+      this.map,
+      this.markers,
+      {
+        styles: [{
+          url: ICON_CIRCLE,
+          height: 20,
+          width: 20,
+          // anchor: [22],
+          textColor: '#fff',
+          textSize: 12,
+        }],
+      },
+    );
   },
   methods: {
     getMarkers() {
