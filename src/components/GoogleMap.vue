@@ -72,6 +72,10 @@ export default {
         center: this.center,
         zoom: this.zoom,
         styles: styleLight,
+        fullscreenControl: false,
+        streetViewControl: false,
+        mapTypeControl: false,
+        zoomControl: false,
       };
       this.map = new Map(container, options);
     },
