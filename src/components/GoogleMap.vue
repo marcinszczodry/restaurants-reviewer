@@ -9,6 +9,7 @@
 
 <script>
 import Initializer from 'google-maps-api-loader';
+import styleLight from '@/data/mapStylesLight';
 
 export default {
   name: 'GoogleMap',
@@ -70,6 +71,7 @@ export default {
       const options = {
         center: this.center,
         zoom: this.zoom,
+        styles: styleLight,
       };
       this.map = new Map(container, options);
     },
