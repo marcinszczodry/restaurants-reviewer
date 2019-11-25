@@ -848,6 +848,11 @@
   dependencies:
     find-up "^4.0.0"
 
+"@google/markerclusterer@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@google/markerclusterer/-/markerclusterer-2.0.3.tgz#f6c92ddc248809fc71f1cd89acb84f235b4eca5a"
+  integrity sha512-qES4oSq8gEfeFyrXyDKSj+7QFuHSnTdvnkxQa/l42Novvt90c5NLxuSwH+8fo0ZdHuQ6+SLdCW0GyfFu5RkpaA==
+
 "@hapi/address@2.x.x":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@hapi/address/-/address-2.1.4.tgz#5d67ed43f3fd41a69d4b9ff7b56e7c0d1d0a81e5"
