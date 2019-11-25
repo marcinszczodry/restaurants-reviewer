@@ -9,13 +9,15 @@
         v-if="userGeolocation"
         :position="userGeolocation"
       />
-      <div v-if="restaurants">
+      <google-map-marker-cluster
+        v-if="restaurants"
+      >
         <google-map-restaurant
           v-for="restaurant in restaurants"
           :key="restaurant.id"
           :position="restaurant.geometry.location"
         />
-      </div>
+      </google-map-marker-cluster>
     </google-map>
   </div>
 </template>
@@ -27,9 +29,11 @@
 import GoogleMap from '@/components/GoogleMap.vue';
 import GoogleMapAnchor from '@/components/GoogleMapAnchor.vue';
 import GoogleMapRestaurant from '@/components/GoogleMapRestaurant.vue';
+import GoogleMapMarkerCluster from '@/components/GoogleMapMarkerCluster.vue';
 
 export default {
   components: {
+    GoogleMapMarkerCluster,
     GoogleMapAnchor,
     GoogleMapRestaurant,
     GoogleMap,
