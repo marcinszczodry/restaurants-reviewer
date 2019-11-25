@@ -3,11 +3,21 @@
     <google-map
       :center="userGeolocation ? userGeolocation : mapCenter"
       :zoom="mapZoom"
+      @map-init="handleMapInit"
     >
       <google-map-anchor
         v-if="userGeolocation"
         :position="userGeolocation"
       />
+      <google-map-marker-cluster
+        v-if="restaurants"
+      >
+        <google-map-restaurant
+          v-for="restaurant in restaurants"
+          :key="restaurant.id"
+          :position="restaurant.geometry.location"
+        />
+      </google-map-marker-cluster>
     </google-map>
   </div>
 </template>
@@ -18,20 +28,32 @@
 <script>
 import GoogleMap from '@/components/GoogleMap.vue';
 import GoogleMapAnchor from '@/components/GoogleMapAnchor.vue';
+import GoogleMapRestaurant from '@/components/GoogleMapRestaurant.vue';
+import GoogleMapMarkerCluster from '@/components/GoogleMapMarkerCluster.vue';
 
 export default {
   components: {
+    GoogleMapMarkerCluster,
     GoogleMapAnchor,
+    GoogleMapRestaurant,
     GoogleMap,
   },
   data() {
     return {
+      google: null,
+      googleMap: null,
       map: {
         // by default fallback to england's coordinates
         center: { lat: 52.3555, lng: -1.1743 },
         zoom: 7,
       },
+      status: {
+        userGeolocationFinished: false,
+        mapInitialized: false,
+      },
       userGeolocation: null,
+      restaurantsList: null,
+      restaurantsMaximumRange: 100, // temporarily
     };
   },
   computed: {
@@ -41,17 +63,37 @@ export default {
     mapZoom() {
       return this.map.zoom;
     },
+    restaurants() {
+      return this.restaurantsList;
+    },
   },
   watch: {
     userGeolocation(coords) {
       this.map.zoom = 16;
       this.map.center = coords;
+      if (this.googleMap) this.fetchRestaurants();
+    },
+    status: {
+      handler({ mapInitialized }) {
+        if (this.userGeolocation && mapInitialized) this.fetchRestaurants();
+      },
+      deep: true,
+    },
+    restaurantsMaximumRange: {
+      handler() {
+        this.fetchRestaurants();
+      },
     },
   },
   async created() {
     this.userGeolocation = await this.getUserPosition();
   },
   methods: {
+    handleMapInit({ google, map }) {
+      this.google = google;
+      this.googleMap = map;
+      this.status.mapInitialized = true;
+    },
     async getUserPosition() {
       let location = null;
       let message = null;
@@ -80,7 +122,48 @@ export default {
         // eslint-disable-next-line
         console.warn(error);
       }
+      this.status.userGeolocationFinished = true;
       return location;
+    },
+    async fetchRestaurants() {
+      const { PlacesService, PlacesServiceStatus } = this.google.maps.places;
+      const service = new PlacesService(this.googleMap);
+      const request = {
+        location: this.userGeolocation,
+        radius: this.restaurantsMaximumRange,
+        type: [
+          'restaurant',
+        ],
+      };
+      let extractedRestaurantsDetails = [];
+      await service.nearbySearch(request, (results, status, pagination) => {
+        if (status === PlacesServiceStatus.OK) {
+          results.forEach((r) => {
+            const {
+              /* eslint-disable camelcase */
+              place_id,
+              name,
+              geometry,
+              rating,
+              user_ratings_total,
+              /* eslint-enable camelcase */
+            } = r;
+            const singleRestaurantDetails = {
+              id: place_id,
+              name,
+              geometry,
+              rating,
+              ratingCount: user_ratings_total,
+            };
+            extractedRestaurantsDetails = [...extractedRestaurantsDetails, singleRestaurantDetails];
+          });
+          if (pagination.hasNextPage) {
+            pagination.nextPage();
+          } else {
+            this.restaurantsList = extractedRestaurantsDetails;
+          }
+        }
+      });
     },
   },
 };

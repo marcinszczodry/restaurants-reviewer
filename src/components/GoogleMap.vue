@@ -53,9 +53,14 @@ export default {
   created() {
     Initializer({
       apiKey: this.API_KEY,
+      libraries: ['places'],
     }).then((google) => {
       this.google = google;
       this.initialize();
+      this.$emit('map-init', {
+        google: this.google,
+        map: this.map,
+      });
     });
   },
   methods: {
