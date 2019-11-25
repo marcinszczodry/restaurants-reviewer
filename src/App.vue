@@ -49,7 +49,7 @@ export default {
       },
       userGeolocation: null,
       restaurantsList: null,
-      restaurantsMaximumRange: 500,
+      restaurantsMaximumRange: 100, // temporarily
     };
   },
   computed: {
@@ -126,10 +126,9 @@ export default {
           'restaurant',
         ],
       };
-      // eslint-disable-next-line
-      await service.nearbySearch(request, (results, status) => {
+      let extractedRestaurantsDetails = [];
+      await service.nearbySearch(request, (results, status, pagination) => {
         if (status === PlacesServiceStatus.OK) {
-          let extractedRestaurantsDetails = [];
           results.forEach((r) => {
             const {
               /* eslint-disable camelcase */
@@ -149,7 +148,11 @@ export default {
             };
             extractedRestaurantsDetails = [...extractedRestaurantsDetails, singleRestaurantDetails];
           });
-          if (extractedRestaurantsDetails) this.restaurantsList = extractedRestaurantsDetails;
+          if (pagination.hasNextPage) {
+            pagination.nextPage();
+          } else {
+            this.restaurantsList = extractedRestaurantsDetails;
+          }
         }
       });
     },
