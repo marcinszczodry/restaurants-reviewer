@@ -28,6 +28,7 @@ export default {
   data() {
     return {
       google: null,
+      googleMap: null,
       map: {
         // by default fallback to england's coordinates
         center: { lat: 52.3555, lng: -1.1743 },
