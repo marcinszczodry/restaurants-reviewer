@@ -53,10 +53,11 @@ export default {
     userGeolocation(coords) {
       this.map.zoom = 16;
       this.map.center = coords;
+      if (this.googleMap) this.fetchRestaurants();
     },
     status: {
-      handler({ userGeolocationFinished, mapInitialized }) {
-        if (userGeolocationFinished && mapInitialized) this.fetchRestaurants();
+      handler({ mapInitialized }) {
+        if (this.userGeolocation && mapInitialized) this.fetchRestaurants();
       },
       deep: true,
     },
