@@ -30,10 +30,15 @@ export default {
       position: this.position,
       icon: this.icon,
     });
-    this.marker.setMap(this.map);
+    if (!this.isParentClusterer()) this.marker.setMap(this.map);
   },
   destroyed() {
-    this.marker.setMap(null);
+    if (!this.isParentClusterer()) this.marker.setMap(null);
+  },
+  methods: {
+    isParentClusterer() {
+      return this.$parent.$options.name === 'GoogleMapMarkerCluster';
+    },
   },
   render: () => null,
 };
