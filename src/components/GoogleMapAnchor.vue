@@ -6,6 +6,12 @@ import ICON_USER from '../assets/icons/iconUser.svg?data';
 export default {
   name: 'GoogleMapAnchor',
   mixins: [marker],
+  props: {
+    range: {
+      type: Number,
+      required: true,
+    },
+  },
   data() {
     return {
       icon: ICON_USER,

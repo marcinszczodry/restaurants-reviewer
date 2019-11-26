@@ -8,6 +8,7 @@
       <google-map-anchor
         v-if="userGeolocation"
         :position="userGeolocation"
+        :range="restaurantsMaximumRange"
       />
       <google-map-marker-cluster
         v-if="restaurants"
