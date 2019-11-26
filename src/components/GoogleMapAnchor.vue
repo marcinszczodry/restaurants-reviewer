@@ -18,6 +18,23 @@ export default {
       circle: null,
     };
   },
+  watch: {
+    position: {
+      handler() {
+        this.swapCircle();
+      },
+      deep: true,
+    },
+    range: {
+      handler(val) {
+        this.circle.setRadius(val);
+      },
+      deep: true,
+    },
+  },
+  mounted() {
+    this.createCircle();
+  },
   methods: {
     initializeCircle() {
       const { Circle } = this.google.maps;
