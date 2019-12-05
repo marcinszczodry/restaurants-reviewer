@@ -66,7 +66,22 @@ export default {
       return this.map.zoom;
     },
     restaurants() {
-      return this.restaurantsGoogleList;
+      let list = [];
+      if (this.google) {
+        if (this.restaurantsGoogleList) {
+          list = list.concat(this.restaurantsGoogleList);
+        }
+        if (this.restaurantsLocalList) {
+          const localList = this.restaurantsLocalList.filter((res) => {
+            const distance = this.getDistanceBetweenTwoLatLng(
+              res.geometry.location, this.userGeolocation,
+            );
+            return distance <= this.restaurantsMaximumRange;
+          });
+          list = list.concat(localList);
+        }
+      }
+      return list;
     },
   },
   watch: {
@@ -169,11 +184,16 @@ export default {
       });
     },
     async fetchLocalRestaurants() {
-      await fetch('https://api.jsonbin.io/b/5de917951c19843d88e6f7f6/2')
+      await fetch('https://api.jsonbin.io/b/5de917951c19843d88e6f7f6/4')
         .then((res) => res.json())
         .then((json) => {
           this.restaurantsLocalList = json;
         });
+    },
+    getDistanceBetweenTwoLatLng(latlng1, latlng2) {
+      const toLatLng = (obj) => new this.google.maps.LatLng(obj);
+      const { computeDistanceBetween } = this.google.maps.geometry.spherical;
+      return computeDistanceBetween(toLatLng(latlng1), toLatLng(latlng2));
     },
   },
 };
