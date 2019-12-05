@@ -20,6 +20,12 @@
         />
       </google-map-marker-cluster>
     </google-map>
+    <base-right-pane v-if="restaurants.length > 0">
+      <restaurants-list
+        v-if="restaurants.length > 0"
+        :list="restaurants"
+      />
+    </base-right-pane>
   </div>
 </template>
 
@@ -31,9 +37,13 @@ import GoogleMap from '@/components/GoogleMap.vue';
 import GoogleMapAnchor from '@/components/GoogleMapAnchor.vue';
 import GoogleMapRestaurant from '@/components/GoogleMapRestaurant.vue';
 import GoogleMapMarkerCluster from '@/components/GoogleMapMarkerCluster.vue';
+import BaseRightPane from '@/components/BaseRightPane.vue';
+import RestaurantsList from '@/components/RestaurantsList.vue';
 
 export default {
   components: {
+    RestaurantsList,
+    BaseRightPane,
     GoogleMapMarkerCluster,
     GoogleMapAnchor,
     GoogleMapRestaurant,
