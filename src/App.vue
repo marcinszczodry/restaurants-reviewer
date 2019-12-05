@@ -20,11 +20,17 @@
         />
       </google-map-marker-cluster>
     </google-map>
-    <base-right-pane v-if="restaurants.length > 0">
+    <base-right-pane>
+      <p v-if="!restaurants">
+        Loading ...
+      </p>
       <restaurants-list
-        v-if="restaurants.length > 0"
+        v-else-if="restaurants.length > 0"
         :list="restaurants"
       />
+      <p v-else-if="restaurants.length < 1">
+        Sorry, there's no restaurants matching these criteria.
+      </p>
     </base-right-pane>
     <restaurants-filters-pane
       v-if="userGeolocation"
@@ -101,12 +107,14 @@ export default {
       return this.map.zoom;
     },
     restaurants() {
-      let list = [];
+      let list = null;
       if (this.google) {
         if (this.restaurantsGoogleList) {
+          if (!Array.isArray(list)) list = [];
           list = list.concat(this.restaurantsGoogleList);
         }
         if (this.restaurantsLocalList) {
+          if (!Array.isArray(list)) list = [];
           const localList = this.restaurantsLocalList.filter((res) => {
             const distance = this.getDistanceBetweenTwoLatLng(
               res.geometry.location, this.userGeolocation,
@@ -115,8 +123,10 @@ export default {
           });
           list = list.concat(localList);
         }
-        // eslint-disable-next-line max-len
-        list = list.filter((res) => res.rating >= this.filterMinRating && res.rating <= this.filterMaxRating);
+        if (Array.isArray(list)) {
+          // eslint-disable-next-line max-len
+          list = list.filter((res) => res.rating >= this.filterMinRating && res.rating <= this.filterMaxRating);
+        }
       }
       return list;
     },
