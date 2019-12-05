@@ -1,0 +1,22 @@
+[
+  {
+    "id": 0,
+    "location": {
+      "lat": 51.549225,
+      "lng": -1.791538
+    },
+    "name": "Test restaurant",
+    "rate": 4.4,
+    "rateCount": 44
+  },
+  {
+    "id": 1,
+    "location": {
+      "lat": 51.549565,
+      "lng": -1.792864
+    },
+    "name": "Test restaurant 2",
+    "rate": 4,
+    "rateCount": 3
+  }
+]
