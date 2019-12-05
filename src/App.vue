@@ -33,6 +33,12 @@
         :max="1000"
         @rangeChange="handleRangeChange"
       />
+      <filter-by-rating
+        :min="filterMinRating"
+        :max="filterMaxRating"
+        @min="handleMinimumRating"
+        @max="handleMaximumRating"
+      />
     </restaurants-filters-pane>
   </div>
 </template>
@@ -49,10 +55,13 @@ import BaseRightPane from '@/components/BaseRightPane.vue';
 import RestaurantsList from '@/components/RestaurantsList.vue';
 import RestaurantsFiltersPane from '@/components/RestaurantsFiltersPane.vue';
 import FilterByDistance from '@/components/FilterByDistance.vue';
+import FilterByRating from '@/components/FilterByRating.vue';
+
 
 export default {
   components: {
     FilterByDistance,
+    FilterByRating,
     RestaurantsFiltersPane,
     RestaurantsList,
     BaseRightPane,
@@ -78,6 +87,8 @@ export default {
       restaurantsGoogleList: null,
       restaurantsLocalList: null,
       restaurantsMaximumRange: 100, // temporarily
+      filterMinimumRatingValue: 1,
+      filterMaximumRatingValue: 5,
     };
   },
   computed: {
@@ -102,8 +113,16 @@ export default {
           });
           list = list.concat(localList);
         }
+        // eslint-disable-next-line max-len
+        list = list.filter((res) => res.rating >= this.filterMinRating && res.rating <= this.filterMaxRating);
       }
       return list;
+    },
+    filterMinRating() {
+      return this.filterMinimumRatingValue;
+    },
+    filterMaxRating() {
+      return this.filterMaximumRatingValue;
     },
   },
   watch: {
@@ -219,6 +238,12 @@ export default {
     },
     handleRangeChange(newRangeValue) {
       this.restaurantsMaximumRange = +newRangeValue;
+    },
+    handleMinimumRating(minValue) {
+      this.filterMinimumRatingValue = +minValue;
+    },
+    handleMaximumRating(maxValue) {
+      this.filterMaximumRatingValue = +maxValue;
     },
   },
 };
