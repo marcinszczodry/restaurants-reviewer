@@ -53,7 +53,8 @@ export default {
         mapInitialized: false,
       },
       userGeolocation: null,
-      restaurantsList: null,
+      restaurantsGoogleList: null,
+      restaurantsLocalList: null,
       restaurantsMaximumRange: 100, // temporarily
     };
   },
@@ -65,29 +66,30 @@ export default {
       return this.map.zoom;
     },
     restaurants() {
-      return this.restaurantsList;
+      return this.restaurantsGoogleList;
     },
   },
   watch: {
     userGeolocation(coords) {
       this.map.zoom = 16;
       this.map.center = coords;
-      if (this.googleMap) this.fetchRestaurants();
+      if (this.googleMap) this.fetchGoogleRestaurants();
     },
     status: {
       handler({ mapInitialized }) {
-        if (this.userGeolocation && mapInitialized) this.fetchRestaurants();
+        if (this.userGeolocation && mapInitialized) this.fetchGoogleRestaurants();
       },
       deep: true,
     },
     restaurantsMaximumRange: {
       handler() {
-        this.fetchRestaurants();
+        this.fetchGoogleRestaurants();
       },
     },
   },
   async created() {
     this.userGeolocation = await this.getUserPosition();
+    await this.fetchLocalRestaurants();
   },
   methods: {
     handleMapInit({ google, map }) {
@@ -126,7 +128,7 @@ export default {
       this.status.userGeolocationFinished = true;
       return location;
     },
-    async fetchRestaurants() {
+    async fetchGoogleRestaurants() {
       const { PlacesService, PlacesServiceStatus } = this.google.maps.places;
       const service = new PlacesService(this.googleMap);
       const request = {
@@ -161,10 +163,17 @@ export default {
           if (pagination.hasNextPage) {
             pagination.nextPage();
           } else {
-            this.restaurantsList = extractedRestaurantsDetails;
+            this.restaurantsGoogleList = extractedRestaurantsDetails;
           }
         }
       });
+    },
+    async fetchLocalRestaurants() {
+      await fetch('https://api.jsonbin.io/b/5de917951c19843d88e6f7f6/2')
+        .then((res) => res.json())
+        .then((json) => {
+          this.restaurantsLocalList = json;
+        });
     },
   },
 };
