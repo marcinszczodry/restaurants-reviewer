@@ -26,7 +26,9 @@
         :list="restaurants"
       />
     </base-right-pane>
-    <restaurants-filters-pane>
+    <restaurants-filters-pane
+      v-if="userGeolocation"
+    >
       <filter-by-distance
         :value="restaurantsMaximumRange"
         :min="100"
