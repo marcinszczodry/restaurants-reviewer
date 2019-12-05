@@ -20,6 +20,28 @@
         />
       </google-map-marker-cluster>
     </google-map>
+    <base-right-pane v-if="restaurants.length > 0">
+      <restaurants-list
+        v-if="restaurants.length > 0"
+        :list="restaurants"
+      />
+    </base-right-pane>
+    <restaurants-filters-pane
+      v-if="userGeolocation"
+    >
+      <filter-by-distance
+        :value="restaurantsMaximumRange"
+        :min="100"
+        :max="1000"
+        @rangeChange="handleRangeChange"
+      />
+      <filter-by-rating
+        :min="filterMinRating"
+        :max="filterMaxRating"
+        @min="handleMinimumRating"
+        @max="handleMaximumRating"
+      />
+    </restaurants-filters-pane>
   </div>
 </template>
 
@@ -31,9 +53,20 @@ import GoogleMap from '@/components/GoogleMap.vue';
 import GoogleMapAnchor from '@/components/GoogleMapAnchor.vue';
 import GoogleMapRestaurant from '@/components/GoogleMapRestaurant.vue';
 import GoogleMapMarkerCluster from '@/components/GoogleMapMarkerCluster.vue';
+import BaseRightPane from '@/components/BaseRightPane.vue';
+import RestaurantsList from '@/components/RestaurantsList.vue';
+import RestaurantsFiltersPane from '@/components/RestaurantsFiltersPane.vue';
+import FilterByDistance from '@/components/FilterByDistance.vue';
+import FilterByRating from '@/components/FilterByRating.vue';
+
 
 export default {
   components: {
+    FilterByDistance,
+    FilterByRating,
+    RestaurantsFiltersPane,
+    RestaurantsList,
+    BaseRightPane,
     GoogleMapMarkerCluster,
     GoogleMapAnchor,
     GoogleMapRestaurant,
@@ -56,6 +89,8 @@ export default {
       restaurantsGoogleList: null,
       restaurantsLocalList: null,
       restaurantsMaximumRange: 100, // temporarily
+      filterMinimumRatingValue: 1,
+      filterMaximumRatingValue: 5,
     };
   },
   computed: {
@@ -80,8 +115,16 @@ export default {
           });
           list = list.concat(localList);
         }
+        // eslint-disable-next-line max-len
+        list = list.filter((res) => res.rating >= this.filterMinRating && res.rating <= this.filterMaxRating);
       }
       return list;
+    },
+    filterMinRating() {
+      return this.filterMinimumRatingValue;
+    },
+    filterMaxRating() {
+      return this.filterMaximumRatingValue;
     },
   },
   watch: {
@@ -194,6 +237,15 @@ export default {
       const toLatLng = (obj) => new this.google.maps.LatLng(obj);
       const { computeDistanceBetween } = this.google.maps.geometry.spherical;
       return computeDistanceBetween(toLatLng(latlng1), toLatLng(latlng2));
+    },
+    handleRangeChange(newRangeValue) {
+      this.restaurantsMaximumRange = +newRangeValue;
+    },
+    handleMinimumRating(minValue) {
+      this.filterMinimumRatingValue = +minValue;
+    },
+    handleMaximumRating(maxValue) {
+      this.filterMaximumRatingValue = +maxValue;
     },
   },
 };
