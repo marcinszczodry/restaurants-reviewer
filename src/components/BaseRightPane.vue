@@ -12,6 +12,7 @@ export default {
 
 <style scoped>
   div {
+    box-sizing: border-box;
     position: fixed;
     top: 0;
     right: 0;
