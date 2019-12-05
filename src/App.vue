@@ -26,6 +26,14 @@
         :list="restaurants"
       />
     </base-right-pane>
+    <restaurants-filters-pane>
+      <filter-by-distance
+        :value="restaurantsMaximumRange"
+        :min="100"
+        :max="1000"
+        @rangeChange="handleRangeChange"
+      />
+    </restaurants-filters-pane>
   </div>
 </template>
 
@@ -39,9 +47,13 @@ import GoogleMapRestaurant from '@/components/GoogleMapRestaurant.vue';
 import GoogleMapMarkerCluster from '@/components/GoogleMapMarkerCluster.vue';
 import BaseRightPane from '@/components/BaseRightPane.vue';
 import RestaurantsList from '@/components/RestaurantsList.vue';
+import RestaurantsFiltersPane from '@/components/RestaurantsFiltersPane.vue';
+import FilterByDistance from '@/components/FilterByDistance.vue';
 
 export default {
   components: {
+    FilterByDistance,
+    RestaurantsFiltersPane,
     RestaurantsList,
     BaseRightPane,
     GoogleMapMarkerCluster,
@@ -204,6 +216,9 @@ export default {
       const toLatLng = (obj) => new this.google.maps.LatLng(obj);
       const { computeDistanceBetween } = this.google.maps.geometry.spherical;
       return computeDistanceBetween(toLatLng(latlng1), toLatLng(latlng2));
+    },
+    handleRangeChange(newRangeValue) {
+      this.restaurantsMaximumRange = +newRangeValue;
     },
   },
 };
