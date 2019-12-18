@@ -48,10 +48,21 @@
         @max="handleMaximumRating"
       />
     </restaurants-filters-pane>
+    <button
+      v-if="!restaurantModal"
+      class="add-new-restaurant"
+    >
+      Add new restaurants
+    </button>
   </div>
 </template>
 
 <style lang="scss">
+  .add-new-restaurant {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+  }
 </style>
 
 <script>
@@ -64,7 +75,6 @@ import RestaurantsList from '@/components/RestaurantsList.vue';
 import RestaurantsFiltersPane from '@/components/RestaurantsFiltersPane.vue';
 import FilterByDistance from '@/components/FilterByDistance.vue';
 import FilterByRating from '@/components/FilterByRating.vue';
-
 
 export default {
   components: {
@@ -97,9 +107,13 @@ export default {
       restaurantsMaximumRange: 100, // temporarily
       filterMinimumRatingValue: 1,
       filterMaximumRatingValue: 5,
+      showNewRestaurantModal: false,
     };
   },
   computed: {
+    restaurantModal() {
+      return this.showNewRestaurantModal;
+    },
     mapCenter() {
       return this.map.center;
     },
