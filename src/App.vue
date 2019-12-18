@@ -49,11 +49,16 @@
       />
     </restaurants-filters-pane>
     <button
+      @click="showNewRestaurantModal = true"
       v-if="!restaurantModal"
       class="add-new-restaurant"
     >
       Add new restaurants
     </button>
+    <new-restaurant-modal
+      v-if="restaurantModal"
+      @modal-close="showNewRestaurantModal = false"
+    />
   </div>
 </template>
 
@@ -75,9 +80,11 @@ import RestaurantsList from '@/components/RestaurantsList.vue';
 import RestaurantsFiltersPane from '@/components/RestaurantsFiltersPane.vue';
 import FilterByDistance from '@/components/FilterByDistance.vue';
 import FilterByRating from '@/components/FilterByRating.vue';
+import NewRestaurantModal from '@/components/NewRestaurantModal.vue';
 
 export default {
   components: {
+    NewRestaurantModal,
     FilterByDistance,
     FilterByRating,
     RestaurantsFiltersPane,
