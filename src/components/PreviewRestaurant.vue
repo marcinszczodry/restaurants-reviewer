@@ -6,6 +6,10 @@
       Go back
     </button>
     <h2>{{ details.name }}</h2>
+    <img
+      :src="streetViewUrl"
+      :alt="`The front view of ${details.name}`"
+    />
     <table>
       <tr>
         <td>Rating</td>
@@ -27,6 +31,11 @@ export default {
       type: Object,
       required: false,
     },
+  },
+  data() {
+    return {
+      streetViewUrl: `https://maps.googleapis.com/maps/api/streetview?size=260x100&location=${this.details.geometry.location.lat()},${this.details.geometry.location.lng()}&heading=151.78&pitch=-0.76&key=AIzaSyD1QsK0TVMn_SWdk0k1K5oLR_DS0_6Cbqo`,
+    };
   },
 };
 </script>
