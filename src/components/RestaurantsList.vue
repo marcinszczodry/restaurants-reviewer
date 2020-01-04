@@ -3,6 +3,7 @@
     <li
       v-for="res in list"
       :key="res.id"
+      @click="$emit('restaurant-clicked', res)"
     >
       <p
         v-if="res.rating"

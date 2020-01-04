@@ -35,6 +35,7 @@
       <restaurants-list
         v-else-if="restaurants.length > 0"
         :list="restaurants"
+        @restaurant-clicked="handleRestaurantClick"
       />
       <p v-else-if="restaurants.length < 1">
         Sorry, there's no restaurants matching these criteria.
