@@ -27,6 +27,7 @@
       <preview-restaurant
         v-if="preview"
         :details="preview"
+        @close-preview="preview = false"
       />
       <p v-else-if="!restaurants">
         Loading ...

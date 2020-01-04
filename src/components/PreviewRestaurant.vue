@@ -1,5 +1,10 @@
 <template>
   <div>
+    <button
+      @click="$emit('close-preview')"
+    >
+      Go back
+    </button>
     <h2>{{ details.name }}</h2>
     <table>
       <tr>
