@@ -7,6 +7,7 @@
     >
       <google-map-anchor
         v-if="userGeolocation"
+        :hidden="!showNewRestaurantModal"
         :position="userGeolocation"
         :range="restaurantsMaximumRange"
       />
@@ -48,10 +49,29 @@
         @max="handleMaximumRating"
       />
     </restaurants-filters-pane>
+    <button
+      v-if="!restaurantModal"
+      class="add-new-restaurant"
+      @click="showNewRestaurantModal = true"
+    >
+      Add new restaurants
+    </button>
+    <new-restaurant-modal
+      v-if="restaurantModal"
+      :map-instance="googleMap"
+      :google-instance="google"
+      @modal-close="showNewRestaurantModal = false"
+      @add-restaurant="handleNewRestaurant"
+    />
   </div>
 </template>
 
 <style lang="scss">
+  .add-new-restaurant {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+  }
 </style>
 
 <script>
@@ -64,10 +84,11 @@ import RestaurantsList from '@/components/RestaurantsList.vue';
 import RestaurantsFiltersPane from '@/components/RestaurantsFiltersPane.vue';
 import FilterByDistance from '@/components/FilterByDistance.vue';
 import FilterByRating from '@/components/FilterByRating.vue';
-
+import NewRestaurantModal from '@/components/NewRestaurantModal.vue';
 
 export default {
   components: {
+    NewRestaurantModal,
     FilterByDistance,
     FilterByRating,
     RestaurantsFiltersPane,
@@ -94,12 +115,17 @@ export default {
       userGeolocation: null,
       restaurantsGoogleList: null,
       restaurantsLocalList: null,
+      restaurantsUserList: [],
       restaurantsMaximumRange: 100, // temporarily
       filterMinimumRatingValue: 1,
       filterMaximumRatingValue: 5,
+      showNewRestaurantModal: false,
     };
   },
   computed: {
+    restaurantModal() {
+      return this.showNewRestaurantModal;
+    },
     mapCenter() {
       return this.map.center;
     },
@@ -122,6 +148,16 @@ export default {
             return distance <= this.restaurantsMaximumRange;
           });
           list = list.concat(localList);
+        }
+        if (this.restaurantsUserList) {
+          if (!Array.isArray(list)) list = [];
+          const userList = this.restaurantsUserList.filter((res) => {
+            const distance = this.getDistanceBetweenTwoLatLng(
+              res.geometry.location, this.userGeolocation,
+            );
+            return distance <= this.restaurantsMaximumRange;
+          });
+          list = list.concat(userList);
         }
         if (Array.isArray(list)) {
           // eslint-disable-next-line max-len
@@ -256,6 +292,13 @@ export default {
     },
     handleMaximumRating(maxValue) {
       this.filterMaximumRatingValue = +maxValue;
+    },
+    // eslint-disable-next-line no-unused-vars
+    handleNewRestaurant(payload) {
+      this.showNewRestaurantModal = false;
+      const restaurantObject = payload;
+      restaurantObject.id = this.restaurantsUserList.length;
+      this.restaurantsUserList.push(restaurantObject);
     },
   },
 };
