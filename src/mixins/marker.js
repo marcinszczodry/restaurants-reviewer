@@ -7,6 +7,10 @@ export default {
       type: Object,
       required: true,
     },
+    restaurantDetails: {
+      type: Object,
+      required: false,
+    },
   },
   data() {
     return {

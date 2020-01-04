@@ -18,12 +18,15 @@
           v-for="restaurant in restaurants"
           :key="restaurant.id"
           :position="restaurant.geometry.location"
+          :restaurant-details="restaurant"
+          @restaurant-clicked="handleRestaurantClick"
         />
       </google-map-marker-cluster>
     </google-map>
     <base-right-pane>
       <preview-restaurant
         v-if="preview"
+        :details="preview"
       />
       <p v-else-if="!restaurants">
         Loading ...
@@ -305,6 +308,9 @@ export default {
       const restaurantObject = payload;
       restaurantObject.id = this.restaurantsUserList.length;
       this.restaurantsUserList.push(restaurantObject);
+    },
+    handleRestaurantClick(restaurant) {
+      this.preview = restaurant;
     },
   },
 };
