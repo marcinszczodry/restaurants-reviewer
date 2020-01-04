@@ -18,16 +18,24 @@
           v-for="restaurant in restaurants"
           :key="restaurant.id"
           :position="restaurant.geometry.location"
+          :restaurant-details="restaurant"
+          @restaurant-clicked="handleRestaurantClick"
         />
       </google-map-marker-cluster>
     </google-map>
     <base-right-pane>
-      <p v-if="!restaurants">
+      <preview-restaurant
+        v-if="preview"
+        :details="preview"
+        @close-preview="preview = false"
+      />
+      <p v-else-if="!restaurants">
         Loading ...
       </p>
       <restaurants-list
         v-else-if="restaurants.length > 0"
         :list="restaurants"
+        @restaurant-clicked="handleRestaurantClick"
       />
       <p v-else-if="restaurants.length < 1">
         Sorry, there's no restaurants matching these criteria.
@@ -85,9 +93,11 @@ import RestaurantsFiltersPane from '@/components/RestaurantsFiltersPane.vue';
 import FilterByDistance from '@/components/FilterByDistance.vue';
 import FilterByRating from '@/components/FilterByRating.vue';
 import NewRestaurantModal from '@/components/NewRestaurantModal.vue';
+import PreviewRestaurant from '@/components/PreviewRestaurant.vue';
 
 export default {
   components: {
+    PreviewRestaurant,
     NewRestaurantModal,
     FilterByDistance,
     FilterByRating,
@@ -120,6 +130,7 @@ export default {
       filterMinimumRatingValue: 1,
       filterMaximumRatingValue: 5,
       showNewRestaurantModal: false,
+      preview: false,
     };
   },
   computed: {
@@ -299,6 +310,9 @@ export default {
       const restaurantObject = payload;
       restaurantObject.id = this.restaurantsUserList.length;
       this.restaurantsUserList.push(restaurantObject);
+    },
+    handleRestaurantClick(restaurant) {
+      this.preview = restaurant;
     },
   },
 };
