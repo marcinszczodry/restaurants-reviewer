@@ -34,7 +34,7 @@ export default {
   },
   data() {
     return {
-      streetViewUrl: `https://maps.googleapis.com/maps/api/streetview?size=260x100&location=${this.details.geometry.location.lat()},${this.details.geometry.location.lng()}&heading=151.78&pitch=-0.76&key=AIzaSyD1QsK0TVMn_SWdk0k1K5oLR_DS0_6Cbqo`,
+      streetViewUrl: `https://maps.googleapis.com/maps/api/streetview?size=260x100&location=${this.details.geometry.location.lat()},${this.details.geometry.location.lng()}&heading=60&pitch=-0.76&key=AIzaSyD1QsK0TVMn_SWdk0k1K5oLR_DS0_6Cbqo`,
     };
   },
 };
