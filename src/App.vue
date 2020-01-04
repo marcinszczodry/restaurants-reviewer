@@ -22,7 +22,10 @@
       </google-map-marker-cluster>
     </google-map>
     <base-right-pane>
-      <p v-if="!restaurants">
+      <preview-restaurant
+        v-if="preview"
+      />
+      <p v-else-if="!restaurants">
         Loading ...
       </p>
       <restaurants-list
@@ -85,9 +88,11 @@ import RestaurantsFiltersPane from '@/components/RestaurantsFiltersPane.vue';
 import FilterByDistance from '@/components/FilterByDistance.vue';
 import FilterByRating from '@/components/FilterByRating.vue';
 import NewRestaurantModal from '@/components/NewRestaurantModal.vue';
+import PreviewRestaurant from '@/components/PreviewRestaurant.vue';
 
 export default {
   components: {
+    PreviewRestaurant,
     NewRestaurantModal,
     FilterByDistance,
     FilterByRating,
@@ -120,6 +125,7 @@ export default {
       filterMinimumRatingValue: 1,
       filterMaximumRatingValue: 5,
       showNewRestaurantModal: false,
+      preview: false,
     };
   },
   computed: {
