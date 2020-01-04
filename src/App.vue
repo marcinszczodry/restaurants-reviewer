@@ -7,6 +7,7 @@
     >
       <google-map-anchor
         v-if="userGeolocation"
+        :hidden="!showNewRestaurantModal"
         :position="userGeolocation"
         :range="restaurantsMaximumRange"
       />
@@ -49,15 +50,18 @@
       />
     </restaurants-filters-pane>
     <button
-      @click="showNewRestaurantModal = true"
       v-if="!restaurantModal"
       class="add-new-restaurant"
+      @click="showNewRestaurantModal = true"
     >
       Add new restaurants
     </button>
     <new-restaurant-modal
       v-if="restaurantModal"
+      :map-instance="googleMap"
+      :google-instance="google"
       @modal-close="showNewRestaurantModal = false"
+      @add-restaurant="handleNewRestaurant"
     />
   </div>
 </template>
@@ -111,6 +115,7 @@ export default {
       userGeolocation: null,
       restaurantsGoogleList: null,
       restaurantsLocalList: null,
+      restaurantsUserList: [],
       restaurantsMaximumRange: 100, // temporarily
       filterMinimumRatingValue: 1,
       filterMaximumRatingValue: 5,
@@ -143,6 +148,16 @@ export default {
             return distance <= this.restaurantsMaximumRange;
           });
           list = list.concat(localList);
+        }
+        if (this.restaurantsUserList) {
+          if (!Array.isArray(list)) list = [];
+          const userList = this.restaurantsUserList.filter((res) => {
+            const distance = this.getDistanceBetweenTwoLatLng(
+              res.geometry.location, this.userGeolocation,
+            );
+            return distance <= this.restaurantsMaximumRange;
+          });
+          list = list.concat(userList);
         }
         if (Array.isArray(list)) {
           // eslint-disable-next-line max-len
@@ -277,6 +292,13 @@ export default {
     },
     handleMaximumRating(maxValue) {
       this.filterMaximumRatingValue = +maxValue;
+    },
+    // eslint-disable-next-line no-unused-vars
+    handleNewRestaurant(payload) {
+      this.showNewRestaurantModal = false;
+      const restaurantObject = payload;
+      restaurantObject.id = this.restaurantsUserList.length;
+      this.restaurantsUserList.push(restaurantObject);
     },
   },
 };

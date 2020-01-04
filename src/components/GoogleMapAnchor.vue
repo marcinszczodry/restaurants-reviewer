@@ -11,6 +11,10 @@ export default {
       type: Number,
       required: true,
     },
+    hidden: {
+      type: Boolean,
+      required: false,
+    },
   },
   data() {
     return {
@@ -30,6 +34,15 @@ export default {
         this.circle.setRadius(val);
       },
       deep: true,
+    },
+    hidden: {
+      handler(val) {
+        if (!val) {
+          this.removeCircle(this.circle);
+        } else {
+          this.createCircle();
+        }
+      },
     },
   },
   mounted() {
